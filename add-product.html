@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sell Item | NITS Bazar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ==========================================
+           🎨 DARK MODE: BLACK & RED THEME (CSS)
+           ========================================== */
+        :root {
+            --primary: #ff1e1e;       
+            --primary-hover: #cc0000; 
+            --bg: #0d0d0d;            
+            --surface: #1a1a1a;       
+            --text: #f3f4f6;          
+            --text-light: #9ca3af;    
+            --border: #333333;        
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); display: flex; flex-direction: column; min-height: 100vh; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; width: 100%; }
+
+        /* Navbar */
+        .navbar { background: var(--surface); box-shadow: 0 2px 10px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .logo a { font-size: 1.5rem; font-weight: 700; text-decoration: none; color: var(--text); }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 20px; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        
+        .btn-primary { background: var(--primary); color: white; padding: 10px 20px; border-radius: 6px; transition: 0.2s; border: none; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 30, 30, 0.3); width: 100%; font-size: 1.1rem; margin-top: 10px;}
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255, 30, 30, 0.4); }
+
+        /* Form Layout */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 40px 0; }
+        .form-card { background: var(--surface); padding: 40px; border-radius: 12px; width: 100%; max-width: 550px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .form-card h2 { color: var(--text); margin-bottom: 10px; font-size: 2rem; }
+        .form-card p { color: var(--text-light); margin-bottom: 30px; }
+
+        /* Inputs */
+        .input-group { margin-bottom: 20px; display: flex; flex-direction: column; text-align: left; }
+        .row { display: flex; gap: 20px; flex-wrap: wrap; }
+        .row .input-group { flex: 1; min-width: 200px; }
+        
+        label { margin-bottom: 8px; font-weight: 500; color: #d1d5db; font-size: 0.95rem; }
+        input, select, textarea { width: 100%; padding: 12px; background-color: #262626; color: var(--text); border: 1px solid var(--border); border-radius: 6px; outline: none; transition: 0.3s; font-size: 1rem; }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(255, 30, 30, 0.2); }
+        input::placeholder, textarea::placeholder { color: #6b7280; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="logo"><a href="index.html">NITS<span>Bazar</span></a></div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="index.html">← Back to Marketplace</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="form-card">
+            <h2>List Your Item</h2>
+            <p>Fill in the details to reach fellow students instantly.</p>
+
+            <form id="productForm">
+                <div class="input-group">
+                    <label for="name">Product Name</label>
+                    <input type="text" id="name" placeholder="e.g. Engineering Mathematics Vol 1" required />
+                </div>
+
+                <div class="row">
+                    <div class="input-group">
+                        <label for="price">Price (₹)</label>
+                        <input type="number" id="price" placeholder="500" required />
+                    </div>
+                    <div class="input-group">
+                        <label for="category">Category</label>
+                        <select id="category" required>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Books">Books & Notes</option>
+                            <option value="Cycles">Cycles</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="reason">Description / Condition</label>
+                    <input type="text" id="reason" placeholder="e.g. Almost new, used for 1 semester" required />
+                </div>
+
+                <div class="input-group">
+                    <label for="image">Image URL</label>
+                    <input type="url" id="image" placeholder="Paste image link here (leave blank for default)" />
+                </div>
+
+                <div class="input-group">
+                    <label for="contact">Contact Number</label>
+                    <input type="tel" id="contact" placeholder="10-digit mobile number" pattern="[0-9]{10}" required />
+                </div>
+
+                <button type="submit" id="submitBtn" class="btn-primary">Post Product</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('productForm').addEventListener('submit', async function(e) {
+            e.preventDefault(); // Page reload hone se roko
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.innerText = "Posting...";
+            submitBtn.style.opacity = "0.7";
+            submitBtn.disabled = true;
+
+            // Form se data uthao
+            const productData = {
+                product_name: document.getElementById('name').value,
+                price: document.getElementById('price').value,
+                category: document.getElementById('category').value,
+                reason_for_selling: document.getElementById('reason').value,
+                pic_url: document.getElementById('image').value || "null", // Agar empty hai toh "null" bhejo
+                contact: document.getElementById('contact').value
+            };
+
+            try {
+                // Flask Backend API pe POST request maaro
+                const response = await fetch('http://127.0.0.1:5000/api/add-product', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(productData)
+                });
+
+                if (response.ok) {
+                    alert('🎉 Product listed successfully on NITS Bazar!');
+                    document.getElementById('productForm').reset();
+                    window.location.href = "index.html"; // Wapas Home page bhej do
+                } else {
+                    const errorData = await response.json();
+                    alert('❌ Error saving product: ' + (errorData.message || 'Unknown error'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ Backend se connect nahi ho pa raha hai. Flask server on hai?');
+            } finally {
+                // Button wapas normal karo
+                submitBtn.innerText = "Post Product";
+                submitBtn.style.opacity = "1";
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>

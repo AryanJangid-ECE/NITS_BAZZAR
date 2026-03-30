@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NITS Bazar | Campus Marketplace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <style>
+        /* ==========================================
+           🎨 DARK MODE: BLACK & RED THEME (CSS)
+           ========================================== */
+        :root {
+            --primary: #ff1e1e;       /* Bright Red / Crimson */
+            --primary-hover: #cc0000; /* Darker Red for hover */
+            --bg: #0d0d0d;            /* Deep Black background */
+            --surface: #1a1a1a;       /* Dark Gray for cards & navbar */
+            --text: #f3f4f6;          /* Off-white for readability */
+            --text-light: #9ca3af;    /* Gray for secondary text */
+            --border: #333333;        /* Subtle dark borders */
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--text); }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* Navbar */
+        .navbar { background: var(--surface); box-shadow: 0 2px 10px rgba(0,0,0,0.5); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+        .nav-container { display: flex; justify-content: space-between; align-items: center; height: 70px; }
+        .logo a { font-size: 1.5rem; font-weight: 700; text-decoration: none; color: var(--text); }
+        .logo span { color: var(--primary); }
+        .nav-links { display: flex; gap: 20px; list-style: none; align-items: center; }
+        .nav-links a { text-decoration: none; color: var(--text); font-weight: 500; cursor: pointer; transition: 0.3s; }
+        .nav-links a:hover { color: var(--primary); }
+        .btn-primary { background: var(--primary); color: white !important; padding: 8px 16px; border-radius: 6px; transition: 0.2s; border: none; font-weight: 600; cursor: pointer; box-shadow: 0 4px 15px rgba(255, 30, 30, 0.3);}
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-outline { border: 1px solid var(--primary); color: var(--primary) !important; background: transparent; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 500; transition: 0.2s;}
+        .btn-outline:hover { background: rgba(255, 30, 30, 0.1); }
+
+        /* Hero */
+        .hero { background: linear-gradient(135deg, #2b0000 0%, #050505 100%); color: white; padding: 60px 0; text-align: center; margin-bottom: 40px; border-bottom: 1px solid var(--primary);}
+        .hero h1 { font-size: 2.8rem; margin-bottom: 15px; text-shadow: 0 2px 10px rgba(255, 30, 30, 0.5); }
+        .hero p { font-size: 1.1rem; color: #d1d5db; }
+
+        /* Filters Bar */
+        .filters-bar { display: flex; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; background: var(--surface); padding: 15px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.3); border: 1px solid var(--border);}
+        .filter-select, .search-input { padding: 10px; background-color: #262626; color: var(--text); border: 1px solid var(--border); border-radius: 6px; flex: 1; min-width: 200px; outline: none; transition: 0.3s;}
+        .filter-select:focus, .search-input:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(255, 30, 30, 0.2); }
+
+        /* Product Grid */
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .product-card { background: var(--surface); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.4); transition: transform 0.2s, box-shadow 0.2s; border: 1px solid var(--border); }
+        .product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(255, 30, 30, 0.15); border-color: var(--primary); }
+        .product-img { width: 100%; height: 220px; object-fit: cover; border-bottom: 1px solid var(--border); }
+        .product-info { padding: 20px; }
+        .product-title { font-size: 1.1rem; margin-bottom: 8px; color: var(--text); }
+        .product-price { font-size: 1.4rem; font-weight: 700; color: var(--primary); margin-bottom: 12px; }
+        .product-desc { font-size: 0.9rem; color: var(--text-light); margin-bottom: 15px; line-height: 1.4; }
+
+        /* Modal (Login) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); align-items: center; justify-content: center; z-index: 1000; }
+        .modal-content { background: var(--surface); padding: 30px; border-radius: 12px; width: 90%; max-width: 400px; text-align: center; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .modal-content h2 { color: var(--text); }
+        .modal-content input { width: 100%; padding: 12px; margin: 10px 0; background-color: #262626; color: var(--text); border: 1px solid var(--border); border-radius: 6px; outline: none; }
+        .modal-content input:focus { border-color: var(--primary); }
+
+        /* Hidden Sections */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="container nav-container">
+            <div class="logo"><a href="#" onclick="showView('marketplace')">NITS<span>Bazar</span></a></div>
+            <nav>
+                <ul class="nav-links">
+                    <li><a onclick="showView('marketplace')">Marketplace</a></li>
+                    <li id="auth-btn"><a class="btn-outline" onclick="openLoginModal()">Sign In</a></li>
+                    <li id="user-menu" class="hidden">
+                        <a onclick="showView('dashboard')">👤 My Dashboard</a>
+                        <a onclick="logout()" style="color: red; font-size: 0.9em;">Logout</a>
+                    </li>
+                    <li><a href="add-product.html" class="btn-primary">Sell Item</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main id="view-marketplace">
+        <section class="hero">
+            <div class="container">
+                <h1>Campus Marketplace</h1>
+                <p>The smartest way to buy and sell pre-loved items within NIT Silchar.</p>
+            </div>
+        </section>
+
+        <section class="container">
+            <div class="filters-bar">
+                <input type="text" id="searchInput" class="search-input" placeholder="Search products..." onkeyup="applyFilters()">
+                <select id="categoryFilter" class="filter-select" onchange="applyFilters()">
+                    <option value="All">All Categories</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Books">Books & Notes</option>
+                    <option value="Cycles">Cycles</option>
+                    <option value="WhatsApp Item">WhatsApp Items</option>
+                </select>
+                <select id="sortFilter" class="filter-select" onchange="applyFilters()">
+                    <option value="newest">Sort: Newest First</option>
+                    <option value="price-low">Price: Low to High</option>
+                    <option value="price-high">Price: High to Low</option>
+                </select>
+            </div>
+
+            <div id="products" class="product-grid">
+                <div style="text-align: center; width: 100%; padding: 40px;">Loading awesome deals...</div>
+            </div>
+        </section>
+    </main>
+
+    <main id="view-dashboard" class="hidden container" style="padding-top: 40px; min-height: 60vh;">
+        <h2 style="margin-bottom: 20px;">My Dashboard</h2>
+        <div style="background: black; padding: 20px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 30px;">
+            <h3>Welcome, <span id="dash-username">Student</span>!</h3>
+            <p style="color: var(--text-light); margin-top: 5px;">Here is your purchase and contact history.</p>
+        </div>
+        
+        <h3>Items You Contacted For (Mock Orders)</h3>
+        <div id="order-history" class="product-grid" style="margin-top: 20px;">
+            </div>
+    </main>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 15px;">Sign In to NITS Bazar</h2>
+            <input type="email" id="emailInput" placeholder="College Email (@nits.ac.in)">
+            <input type="password" id="passInput" placeholder="Password">
+            <button class="btn-primary" style="width: 100%; margin-top: 15px; padding: 12px;" onclick="handleLogin()">Login / Register</button>
+            <button class="btn-outline" style="width: 100%; margin-top: 10px; border: none;" onclick="closeLoginModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let allProducts = []; // Backend se aaya hua data yahan save hoga
+        let currentUser = null; 
+
+        // 1. App Start hote hi Backend se Data mango
+        window.onload = async () => {
+            checkAuth();
+            await fetchProducts();
+        };
+
+        // 2. TUMHARA FETCH FUNCTION (Modified for SPA)
+        async function fetchProducts() {
+            const productsContainer = document.getElementById('products');
+            try {
+                // Backend se saare products mango
+                const response = await fetch("http://127.0.0.1:5000/api/products");
+                allProducts = await response.json();
+                
+                // Data aane ke baad UI me render karo
+                renderProducts(allProducts, 'products');
+            } catch (error) {
+                console.error("Error fetching products:", error);
+                productsContainer.innerHTML = "<p style='color:red; text-align:center; width:100%;'>Backend server se connect nahi ho pa raha hai. Server on hai kya?</p>";
+            }
+        }
+
+        // 3. TUMHARA CARD BANANE WALA FUNCTION (Fixed for Contact Button)
+        function renderProducts(productsArray, containerId, isOrderHistory = false) {
+            const grid = document.getElementById(containerId);
+            grid.innerHTML = ''; 
+
+            if (productsArray.length === 0) {
+                grid.innerHTML = "<p style='text-align:center; width:100%; color:var(--text-light);'>No items found.</p>";
+                return;
+            }
+
+            productsArray.forEach(product => {
+                const imageUrl = (product.pic_url && product.pic_url !== "null" && product.pic_url !== "N/A") 
+                    ? product.pic_url 
+                    : "no_image_default.png";
+
+                const cleanPrice = String(product.price).replace(/[^0-9.]/g, ''); 
+
+                // 🔥 The Magic Fix: Ab koi bhi quote code ko break nahi karega
+                const safeName = encodeURIComponent(product.product_name).replace(/'/g, "%27");
+                const safeContact = encodeURIComponent(product.contact || "N/A").replace(/'/g, "%27");
+
+                let buttonHtml = isOrderHistory 
+                    ? `<button class="btn-outline" style="width:100%; margin-top:10px; border-color: #28a745; color: #28a745 !important;" disabled>Contacted Successfully ✅</button>`
+                    : `<button class="btn-primary" style="width: 100%; margin-top: 10px;" onclick="mockPurchase('${safeName}', '${safeContact}')">Contact Seller</button>`;
+
+                const card = `
+                <div class="product-card">
+                    <img src="${imageUrl}" alt="${product.product_name}" class="product-img">
+                    <div class="product-info">
+                        <h3 class="product-title">${product.product_name}</h3>
+                        <p class="product-price">₹${cleanPrice || 'Negotiable'}</p>
+                        <p class="product-desc"><strong>Details:</strong> ${product.reason_for_selling || product.category || "N/A"}</p>
+                        ${buttonHtml}
+                    </div>
+                </div>`;
+                
+                grid.innerHTML += card;
+            });
+        }
+
+        // 4. Filters & Search Logic
+        function applyFilters() {
+            const searchText = document.getElementById('searchInput').value.toLowerCase();
+            const category = document.getElementById('categoryFilter').value;
+            const sortBy = document.getElementById('sortFilter').value;
+
+            // Search text aur category se filter karo
+            let filtered = allProducts.filter(p => {
+                const matchesSearch = p.product_name.toLowerCase().includes(searchText) || (p.reason_for_selling && p.reason_for_selling.toLowerCase().includes(searchText));
+                const matchesCategory = category === 'All' || p.category === category || (!p.category && category === 'WhatsApp Item');
+                return matchesSearch && matchesCategory;
+            });
+
+            // Price ke hisaab se sort karo
+            if (sortBy === 'price-low') {
+                filtered.sort((a, b) => parseFloat(String(a.price).replace(/[^0-9]/g, '')) - parseFloat(String(b.price).replace(/[^0-9]/g, '')));
+            } else if (sortBy === 'price-high') {
+                filtered.sort((a, b) => parseFloat(String(b.price).replace(/[^0-9]/g, '')) - parseFloat(String(a.price).replace(/[^0-9]/g, '')));
+            }
+
+            renderProducts(filtered, 'products'); // Filtered list ko wapas render karo
+        }
+
+        // 5. Authentication System (Mock via LocalStorage)
+        function checkAuth() {
+            const savedUser = localStorage.getItem('nitsUser');
+            if (savedUser) {
+                currentUser = savedUser;
+                document.getElementById('auth-btn').classList.add('hidden');
+                document.getElementById('user-menu').classList.remove('hidden');
+                document.getElementById('dash-username').innerText = currentUser.split('@')[0];
+            } else {
+                currentUser = null;
+                document.getElementById('auth-btn').classList.remove('hidden');
+                document.getElementById('user-menu').classList.add('hidden');
+            }
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('emailInput').value;
+            if (email.includes('@')) {
+                localStorage.setItem('nitsUser', email);
+                closeLoginModal();
+                checkAuth();
+                alert('Successfully Logged In! 🎉');
+            } else {
+                alert('Please enter a valid email.');
+            }
+        }
+
+        function logout() {
+            localStorage.removeItem('nitsUser');
+            showView('marketplace');
+            checkAuth();
+        }
+
+        // 6. Navigation (SPA View Switching)
+        function showView(viewName) {
+            if(viewName === 'dashboard' && !currentUser) {
+                openLoginModal();
+                return;
+            }
+            document.getElementById('view-marketplace').classList.add('hidden');
+            document.getElementById('view-dashboard').classList.add('hidden');
+            document.getElementById(`view-${viewName}`).classList.remove('hidden');
+
+            if(viewName === 'dashboard') loadMockOrders();
+        }
+
+        // 7. Mock Purchase / Orders Logic (100% BUG FREE)
+        function mockPurchase(encName, encContact) {
+            if(!currentUser) {
+                alert('Bhai, pehle login kar lo contact karne ke liye!');
+                openLoginModal();
+                return;
+            }
+            
+            // 🔥 FIX 1: Strings ko wapas normal English mein Decode kiya (%20 hatane ke liye)
+            const productName = decodeURIComponent(encName);
+            const contactInfo = decodeURIComponent(encContact);
+            
+            // Order History me save kiya
+            let orders = JSON.parse(localStorage.getItem('nitsOrders') || '[]');
+            const productData = allProducts.find(p => p.product_name === productName);
+            
+            if(!orders.some(o => o.product_name === productName) && productData) {
+                orders.push(productData);
+                localStorage.setItem('nitsOrders', JSON.stringify(orders));
+            }
+
+            // String se sirf numbers nikalo
+            const cleanNumber = String(contactInfo).replace(/[^0-9]/g, '');
+            
+            // 🔥 FIX 2: Clean Alerts bina kisi \n ke gadbad ke
+            if(cleanNumber.length >= 10) {
+                alert(`Redirecting to WhatsApp for:\n${productName}`);
+                window.open(`https://wa.me/91${cleanNumber.slice(-10)}`, '_blank');
+            } else {
+                // Agar number nahi hai (AI fail hua ya bas contact name hai)
+                const friendName = contactInfo.replace("WhatsApp:", "").trim();
+                alert(`📱 WhatsApp Item!\n\nNo number found in description. Please manually message your friend:\n👉 ${friendName}`);
+            }
+        }
+
+        function loadMockOrders() {
+            const orders = JSON.parse(localStorage.getItem('nitsOrders') || '[]');
+            renderProducts(orders, 'order-history', true);
+        }
+
+        // Modal Controls
+        function openLoginModal() { document.getElementById('loginModal').style.display = 'flex'; }
+        function closeLoginModal() { document.getElementById('loginModal').style.display = 'none'; }
+    </script>
+</body>
+</html>
